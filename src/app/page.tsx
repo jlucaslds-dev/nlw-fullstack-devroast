@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { HomeEditor } from "./home-editor";
+import { HomeStats } from "./home-stats";
 
 const leaderboardEntries = [
   {
@@ -36,7 +38,8 @@ function scoreColor(score: number): string {
   return "text-accent-green";
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  prefetch(trpc.roast.getStats.queryOptions());
   return (
     <main className="flex flex-col items-center">
       {/* Hero */}
@@ -60,15 +63,9 @@ export default function HomePage() {
       </section>
 
       {/* Footer Stats */}
-      <div className="flex items-center gap-6 justify-center pt-8">
-        <span className="font-mono text-xs text-text-tertiary">
-          2,847 codes roasted
-        </span>
-        <span className="font-mono text-xs text-text-tertiary">·</span>
-        <span className="font-mono text-xs text-text-tertiary">
-          avg score: 4.2/10
-        </span>
-      </div>
+      <HydrateClient>
+        <HomeStats />
+      </HydrateClient>
 
       {/* Spacer */}
       <div className="h-15" />
