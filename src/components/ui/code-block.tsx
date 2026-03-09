@@ -5,11 +5,10 @@ import { twMerge } from "tailwind-merge";
 type CodeBlockProps = {
   code: string;
   lang: BundledLanguage;
-  filename?: string;
   className?: string;
 };
 
-async function CodeBlock({ code, lang, filename, className }: CodeBlockProps) {
+async function CodeBlock({ code, lang, className }: CodeBlockProps) {
   const html = await codeToHtml(code, {
     lang,
     theme: "vesper",
@@ -24,20 +23,6 @@ async function CodeBlock({ code, lang, filename, className }: CodeBlockProps) {
         className,
       )}
     >
-      {/* Header */}
-      <div className="flex items-center gap-3 h-10 px-4 border-b border-border-primary">
-        <span className="size-2.5 rounded-full bg-accent-red" />
-        <span className="size-2.5 rounded-full bg-accent-amber" />
-        <span className="size-2.5 rounded-full bg-accent-green" />
-        <span className="flex-1" />
-        {filename && (
-          <span className="font-mono text-xs text-text-tertiary">
-            {filename}
-          </span>
-        )}
-      </div>
-
-      {/* Body */}
       <div className="flex bg-bg-input">
         {/* Line numbers */}
         <div className="flex flex-col items-end gap-1.5 py-3 px-2.5 w-10 border-r border-border-primary bg-bg-surface select-none">
@@ -62,4 +47,27 @@ async function CodeBlock({ code, lang, filename, className }: CodeBlockProps) {
   );
 }
 
-export { CodeBlock, type CodeBlockProps };
+type CodeBlockHeaderProps = {
+  filename?: string;
+};
+
+function CodeBlockHeader({ filename }: CodeBlockHeaderProps) {
+  return (
+    <div className="flex items-center gap-3 h-10 px-4 border-b border-border-primary">
+      <span className="size-2.5 rounded-full bg-accent-red" />
+      <span className="size-2.5 rounded-full bg-accent-amber" />
+      <span className="size-2.5 rounded-full bg-accent-green" />
+      <span className="flex-1" />
+      {filename && (
+        <span className="font-mono text-xs text-text-tertiary">{filename}</span>
+      )}
+    </div>
+  );
+}
+
+export {
+  CodeBlock,
+  CodeBlockHeader,
+  type CodeBlockProps,
+  type CodeBlockHeaderProps,
+};

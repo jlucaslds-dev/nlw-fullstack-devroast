@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/analysis-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CodeBlock } from "@/components/ui/code-block";
+import { CodeBlock, CodeBlockHeader } from "@/components/ui/code-block";
 import { DiffLine } from "@/components/ui/diff-line";
 import {
   LeaderboardRowCode,
@@ -130,11 +130,14 @@ export default function ComponentsPage() {
       {/* Code Block */}
       <Section title="code_block" file="code-block.tsx">
         <div className="max-w-xl">
-          <CodeBlock
-            code={sampleCode}
-            lang="javascript"
-            filename="calculate.js"
-          />
+          <div className="border border-border-primary overflow-hidden">
+            <CodeBlockHeader filename="calculate.js" />
+            <CodeBlock
+              code={sampleCode}
+              lang="javascript"
+              className="border-0"
+            />
+          </div>
         </div>
       </Section>
 
