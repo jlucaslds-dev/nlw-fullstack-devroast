@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
@@ -7,6 +8,9 @@ import { HomeLeaderboardSkeleton } from "./home-leaderboard-skeleton";
 import { HomeStats } from "./home-stats";
 
 export default async function HomePage() {
+  "use cache";
+  cacheLife("hourly");
+
   prefetch(trpc.roast.getStats.queryOptions());
 
   return (
@@ -32,9 +36,11 @@ export default async function HomePage() {
       </section>
 
       {/* Footer Stats */}
-      <HydrateClient>
-        <HomeStats />
-      </HydrateClient>
+      <Suspense>
+        <HydrateClient>
+          <HomeStats />
+        </HydrateClient>
+      </Suspense>
 
       {/* Spacer */}
       <div className="h-15" />
