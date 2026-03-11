@@ -1,45 +1,14 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { HomeEditor } from "./home-editor";
+import { HomeLeaderboard } from "./home-leaderboard";
+import { HomeLeaderboardSkeleton } from "./home-leaderboard-skeleton";
 import { HomeStats } from "./home-stats";
-
-const leaderboardEntries = [
-  {
-    rank: 1,
-    score: 1.2,
-    lines: [
-      'eval(prompt("enter code"))',
-      "document.write(response)",
-      "// trust the user lol",
-    ],
-    language: "javascript",
-  },
-  {
-    rank: 2,
-    score: 1.8,
-    lines: [
-      "if (x == true) { return true; }",
-      "else if (x == false) { return false; }",
-      "else { return !false; }",
-    ],
-    language: "typescript",
-  },
-  {
-    rank: 3,
-    score: 2.1,
-    lines: ["SELECT * FROM users WHERE 1=1", "-- TODO: add authentication"],
-    language: "sql",
-  },
-];
-
-function scoreColor(score: number): string {
-  if (score <= 3) return "text-accent-red";
-  if (score <= 6) return "text-accent-amber";
-  return "text-accent-green";
-}
 
 export default async function HomePage() {
   prefetch(trpc.roast.getStats.queryOptions());
+
   return (
     <main className="flex flex-col items-center">
       {/* Hero */}
@@ -96,67 +65,10 @@ export default async function HomePage() {
           {"// the worst code on the internet, ranked by shame"}
         </p>
 
-        {/* Leaderboard Table */}
-        <div className="border border-border-primary w-full">
-          {/* Table Header */}
-          <div className="flex items-center h-10 px-5 bg-bg-surface border-b border-border-primary">
-            <span className="w-12 font-mono text-xs font-medium text-text-tertiary">
-              #
-            </span>
-            <span className="w-18 font-mono text-xs font-medium text-text-tertiary">
-              score
-            </span>
-            <span className="flex-1 font-mono text-xs font-medium text-text-tertiary">
-              code
-            </span>
-            <span className="w-24 font-mono text-xs font-medium text-text-tertiary text-right">
-              lang
-            </span>
-          </div>
-
-          {/* Table Rows */}
-          {leaderboardEntries.map((entry, index) => (
-            <div
-              key={entry.rank}
-              className={`flex px-5 py-4 ${index < leaderboardEntries.length - 1 ? "border-b border-border-primary" : ""}`}
-            >
-              <span
-                className={`w-12 font-mono text-xs ${entry.rank === 1 ? "text-accent-amber" : "text-text-secondary"}`}
-              >
-                {entry.rank}
-              </span>
-              <span
-                className={`w-18 font-mono text-xs font-bold ${scoreColor(entry.score)}`}
-              >
-                {entry.score.toFixed(1)}
-              </span>
-              <div className="flex-1 flex flex-col gap-0.5">
-                {entry.lines.map((line) => (
-                  <span
-                    key={line}
-                    className={`font-mono text-xs ${line.startsWith("//") || line.startsWith("--") ? "text-text-tertiary" : "text-text-primary"}`}
-                  >
-                    {line}
-                  </span>
-                ))}
-              </div>
-              <span className="w-24 font-mono text-xs text-text-secondary text-right">
-                {entry.language}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        {/* Fade Hint */}
-        <p className="font-mono text-xs text-text-tertiary text-center">
-          showing top 3 of 2,847 ·{" "}
-          <Link
-            href="/leaderboard"
-            className="text-text-secondary hover:text-text-primary transition-colors"
-          >
-            view full leaderboard {">>"}
-          </Link>
-        </p>
+        {/* Leaderboard Table + Footer (async, with skeleton fallback) */}
+        <Suspense fallback={<HomeLeaderboardSkeleton />}>
+          <HomeLeaderboard />
+        </Suspense>
       </section>
     </main>
   );
