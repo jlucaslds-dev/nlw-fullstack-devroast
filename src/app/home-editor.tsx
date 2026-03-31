@@ -35,17 +35,11 @@ function HomeEditor() {
   const createRoast = useMutation(
     trpc.roast.create.mutationOptions({
       onSuccess: async (data) => {
-        console.log("[createRoast.onSuccess] Roast created:", data.id);
         const trackResult = await trackRoastRequest();
-        console.log("[createRoast.onSuccess] trackResult:", trackResult);
         setLastRoastId(data.id);
         
-        // Se email já existe (shouldShowForm = false), redireciona direto
         if (trackResult && !trackResult.shouldShowForm) {
-          console.log("[createRoast.onSuccess] Setting skipModalFlag = true (should skip modal and redirect)");
           setSkipModalFlag(true);
-        } else {
-          console.log("[createRoast.onSuccess] Modal should be open now");
         }
       },
     }),
@@ -56,10 +50,8 @@ function HomeEditor() {
     if (!lastRoastId) return;
 
     const modalJustClosed = prevModalStateRef.current && !isModalOpen;
-    console.log("[redirect effect] lastRoastId:", lastRoastId, "isModalOpen:", isModalOpen, "modalJustClosed:", modalJustClosed);
     
     if (modalJustClosed) {
-      console.log("[redirect effect] Redirecting to /roast/" + lastRoastId);
       router.push(`/roast/${lastRoastId}`);
     }
     
@@ -78,7 +70,6 @@ function HomeEditor() {
   // Redireciona imediatamente se email já foi enviado (skipModalFlag = true)
   useEffect(() => {
     if (lastRoastId && skipModalFlag) {
-      console.log("[skipModalFlag effect] Redirecting immediately to /roast/' + lastRoastId (no modal)");
       router.push(`/roast/${lastRoastId}`);
       setSkipModalFlag(false);
     }
@@ -86,14 +77,12 @@ function HomeEditor() {
 
   // Cancela modal e reseta roast ID (decrementa contador)
   const handleCancel = async () => {
-    console.log("[handleCancel] Modal cancelled");
     await handleCancelModal();
     setLastRoastId(null);
   };
 
   // Fecha modal após submissão bem-sucedida (sem decrementar)
   const handleSubmitSuccess = () => {
-    console.log("[handleSubmitSuccess] Modal closed after successful submission");
     setIsModalOpen(false);
     // Não reseta lastRoastId para deixar o useEffect redirecionar
   };
