@@ -35,7 +35,10 @@ function getOrCreateSessionId(): string {
 }
 
 export function useUserTracking() {
-  const [sessionId, setSessionId] = useState<string>("");
+  const [sessionId, setSessionId] = useState<string>(() => {
+    // Initialize sessionId immediately on mount (not in useEffect)
+    return getOrCreateSessionId();
+  });
   const [shouldShowModal, setShouldShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [requestCount, setRequestCount] = useState(0);
@@ -47,11 +50,6 @@ export function useUserTracking() {
   const decrementRequest = useMutation(
     trpc.roast.decrementRequestCount.mutationOptions(),
   );
-
-  useEffect(() => {
-    const id = getOrCreateSessionId();
-    setSessionId(id);
-  }, []);
 
   const trackRoastRequest = async () => {
     if (!sessionId) {
