@@ -25,3 +25,8 @@ pnpm dev
 ```
 
 Abra [http://localhost:3000](http://localhost:3000) para ver o app.
+
+
+## 📩 Contato
+- **GitHub**: [jlucaslds-dev](https://github.com/jlucaslds-dev)
+- **LinkedIn**: [José Lucas Leite da Silva](https://www.linkedin.com/in/jlucaslds/)
