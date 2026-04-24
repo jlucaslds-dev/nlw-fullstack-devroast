@@ -4,7 +4,7 @@ Cole seu codigo. Leve um roast.
 
 DevRoast e um analisador de qualidade de codigo que da uma nota brutalmente honesta de 0 a 10. Envie qualquer trecho de codigo, ative o "roast mode" pra sarcasmo maximo, e descubra o quao ruim (ou bom) seu codigo realmente e.
 
-Construido durante o evento **NLW** da [Rocketseat](https://rocketseat.com.br), ao longo das aulas do evento.
+Construido durante o evento **NLW Operator 2026** da [Rocketseat](https://rocketseat.com.br), ao longo das aulas do evento.
 
 ## Funcionalidades
 
